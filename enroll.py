@@ -1,13 +1,7 @@
 import os
-import time,datetime
-import shutil
-from openpyxl import Workbook
-from openpyxl import load_workbook
+import time
+from transform import get_easyList
 
-#ROOT_DIR = C:\Users\liuweistrong\Documents\TWA
-LIBRARY_PATH = r'C:\Users\liuweistrong\Documents\TWA\work\library.xlsx'
-JOBINGO_PATH = r'C:\Users\liuweistrong\Documents\TWA\work\willGetJob.xlsx'
-RESULT_PATH = r'C:\Users\liuweistrong\Documents\TWA\result.xlsx'
 
     # 1 生成待录取精简列表
     # appli_lite_pinkun = [[15，True，10000，10002，12225],[],[]...] [编号，服从调剂，岗位编号1，2，3]
@@ -15,81 +9,6 @@ RESULT_PATH = r'C:\Users\liuweistrong\Documents\TWA\result.xlsx'
     #0.1版本只读取A+
 
 
-#load library
-def get_library(flag):
-    appli_book = load_workbook(LIBRARY_PATH)
-    library = []
-    if flag == 1:  # 获取所有报名信息到列表
-        ws = appli_book['library']
-        max_row = ws.max_row
-        #max col固定是14
-        for row in range(2,max_row+1):
-            appli_info = []
-            for j in range(1,14+1):
-                appli_info.append(ws.cell(row,j).value)
-            library.append(appli_info)
-
-            # [1, '姚佳莹', '女', 3017225028, '经管学院', 17302200916, '否', '否', '000001', None, None, '勤管办义务岗主管',None, None]
-        return library
-
-    if flag == 2:  #获取岗位需求信息到字典
-        ws = appli_book['jobInfo']
-        max_row = ws.max_row
-        # max col固定是4
-        for row in range(2, max_row + 1):
-            job_info = {}
-            job_info['num']=ws.cell(row, 1).value#编号
-            job_info['pinkun']=ws.cell(row,3).value
-            job_info['feipin']=ws.cell(row,4).value
-            library.append(job_info)
-
-
-            # class 'list'>: [{'num': '000001', 'pinkun': 3, 'feipin': 0}, {'num': '000002', 'pinkun': 2, 'feipin': 1},
-            #                 {'num': '000004', 'pinkun': 4, 'feipin': 1}, {'num': '210101', 'pinkun': 1, 'feipin': None},
-            #                 {'num': '280301', 'pinkun': 1, 'feipin': None},
-
-        return library
-
-    #def 从编号获取所有信息
-def num2allinfo(num):
-    pass
-#生成待录取的精简列表
-def get_easyList(pin): #返回精简的带录取列表
-    appli_full_info = get_library(1)
-    job_book = load_workbook(JOBINGO_PATH)
-    ws = job_book['worker']
-    easyList = []
-    max_row = ws.max_row
-    for row in range(2,max_row+1):
-        num = ws.cell(row,1).value
-        for appli in appli_full_info:
-            if appli[0] == num:
-                #构造精简列表
-                appli_easy_list = []
-                appli_easy_list.append(appli[0])#编号
-                appli_easy_list.append(appli[6]) #贫困1
-                appli_easy_list.append(appli[7])#服从调剂
-
-                appli_easy_list.append(appli[8])#岗位一
-                appli_easy_list.append(appli[9])#岗位二
-                appli_easy_list.append(appli[10])# 岗位三
-
-                easyList.append(appli_easy_list)
-
-    #划分easyList
-    easyList_pinkun = []
-    easyList_feipin = []
-    for easy in easyList:
-        if easy[1] == '是':
-            del easy[1]
-            easyList_pinkun.append(easy)
-        else:
-            del easy[1]
-            easyList_feipin.append(easy)
-    if pin:
-        return easyList_pinkun
-    else:
-        return easyList_feipin
 
 #对于某一个岗位的录取方法
 def exeEnroll(jobNum,pin,easy_list):
@@ -221,79 +140,9 @@ def enroll_pinkun(jobInfo):
         return None
 
 
-def enrolled2full(enrolled_list):
-    full_info = get_library(1)
-    enrolled_full=[]
-    for enroll_dict in enrolled_list:
-        for bianhao in enroll_dict.keys(): #就一个，取出来编号
-            for appli in full_info:
-                if appli[0] == bianhao:
-                    enroller = appli[:6]
-                    enroller.append(enroll_dict[bianhao])
-                    enrolled_full.append(enroller)
-    return enrolled_full
-
-def write_result(enrolled_feipin,enrolled_pinkun,job_Info,not_enrolled_feipin = None,not_enrolled_pinkun = None):
-    result_book = Workbook()
-    result_book.create_sheet('岗位剩余',0)
-    result_book.create_sheet('贫困-录取的', 1)
-    result_book.create_sheet('非贫困-录取的', 2)
-    result_book.create_sheet('未录取的', 3)
 
 
-    ws_jobInfo = result_book['岗位剩余']
-    ws_jobInfo.cell(1,1).value = '岗位编号'
-    ws_jobInfo.cell(1, 2).value = '贫困生剩余'
-    ws_jobInfo.cell(1, 3).value = '非贫困生剩余'
-    i = 2
-    for job_dict in jobInfo:
-        ws_jobInfo.cell(i,1).value = job_dict['num']
-        ws_jobInfo.cell(i, 2).value = job_dict['pinkun']
-        ws_jobInfo.cell(i, 3).value = job_dict['feipin']
-        i+=1
-
-    ws_pin_enrolled = result_book['贫困-录取的']
-    ws_pin_enrolled.cell(1,1).value = '报名编号'
-    ws_pin_enrolled.cell(1, 2).value = '姓名'
-    ws_pin_enrolled.cell(1, 3).value = '性别'
-    ws_pin_enrolled.cell(1, 4).value = '学号'
-    ws_pin_enrolled.cell(1, 5).value = '学院'
-    ws_pin_enrolled.cell(1, 6).value = '电话'
-    ws_pin_enrolled.cell(1, 7).value = '录取岗位'
-    pin_enrolled = enrolled2full(enrolled_pinkun)
-    i = 2
-    for enroller in pin_enrolled:
-        for j in range(len(enroller)):
-            ws_pin_enrolled.cell(i,j+1).value = enroller[j]
-        i+=1
-
-    ws_fpin_enrolled = result_book['非贫困-录取的']
-    ws_fpin_enrolled.cell(1,1).value = '报名编号'
-    ws_fpin_enrolled.cell(1, 2).value = '姓名'
-    ws_fpin_enrolled.cell(1, 3).value = '性别'
-    ws_fpin_enrolled.cell(1,4).value = '学号'
-    ws_fpin_enrolled.cell(1, 5).value = '学院'
-    ws_fpin_enrolled.cell(1, 6).value = '电话'
-    ws_fpin_enrolled.cell(1, 7).value = '录取岗位'
-    feipin_enrolled = enrolled2full(enrolled_feipin)
-    i = 2
-    for enroller in feipin_enrolled:
-        for j in range(len(enroller)):
-            ws_fpin_enrolled.cell(i,j+1).value = enroller[j]
-        i+=1
-
-    result_book.save(RESULT_PATH)
 
 
-if __name__ == '__main__':
-    print('Welcome to Tangzeling Working Automation Tool')
-    print('现在的时间是： ',time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),'\n','--------------------------------')
 
-    jobInfo = get_library(2)
-    enrolled_feipin,not_enrolled_feipin = enroll_feipin(jobInfo)
-    enrolled_pinkun,not_enrolled_pinkun = enroll_pinkun(jobInfo)
-
-    write_result(enrolled_feipin,enrolled_pinkun,jobInfo)
-    print('录取结果在result.xlsx文件中 打开路径：',RESULT_PATH)
-    input('这个不看了关了就行了')
 
