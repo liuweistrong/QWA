@@ -86,6 +86,7 @@ def enroll_feipin(jobInfo):
                             i+=1
                     else:
                         jobDict['pinkun'] += jobDict['feipin']
+
                         msg = '  因为非贫困生没能招满名额，对于岗位{0}，将非贫困生剩余的{1}个名额增加到贫困生的录取中'.format(jobNum ,jobDict['feipin'])
                         print(msg)
                         break
@@ -94,7 +95,7 @@ def enroll_feipin(jobInfo):
 
     else:
         print('没有非贫困生的名额')
-        return None
+        return None,None
 
 def enroll_pinkun(jobInfo):
     print('------------------------------\n','接下来我们来进行贫困生的录取')
@@ -136,8 +137,8 @@ def enroll_pinkun(jobInfo):
         # 返回的easylist是没有录取的非贫困生，
 
     else:
-        print('没有非贫困生的名额')
-        return None
+        print('没有贫困生的名额')
+        return None,None
 
 
 

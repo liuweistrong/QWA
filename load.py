@@ -28,6 +28,7 @@ def get_library(flag):
             job_info['num']=ws.cell(row, 1).value#编号
             job_info['pinkun']=ws.cell(row,3).value
             job_info['feipin']=ws.cell(row,4).value
+            job_info['name'] = ws.cell(row,2).value
             library.append(job_info)
 
 

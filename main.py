@@ -13,5 +13,8 @@ if __name__ == '__main__':
     enrolled_pinkun,not_enrolled_pinkun = enroll_pinkun(jobInfo)
 
     write_result(enrolled_feipin,enrolled_pinkun,jobInfo)
+
+
     print('录取结果在result.xlsx文件中 打开路径：',RESULT_PATH)
+
     input('这个不看了关了就行了')

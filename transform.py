@@ -44,11 +44,12 @@ def get_easyList(pin): #返回精简的带录取列表
 def enrolled2full(enrolled_list):
     full_info = get_library(1)
     enrolled_full=[]
-    for enroll_dict in enrolled_list:
-        for bianhao in enroll_dict.keys(): #就一个，取出来编号
-            for appli in full_info:
-                if appli[0] == bianhao:
-                    enroller = appli[:6]
-                    enroller.append(enroll_dict[bianhao])
-                    enrolled_full.append(enroller)
+    if(enrolled_list):
+        for enroll_dict in enrolled_list:
+            for bianhao in enroll_dict.keys(): #就一个，取出来编号
+                for appli in full_info:
+                    if appli[0] == bianhao:
+                        enroller = appli[:6]
+                        enroller.append(enroll_dict[bianhao])
+                        enrolled_full.append(enroller)
     return enrolled_full
