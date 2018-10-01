@@ -17,4 +17,10 @@ Work Automation
 *****
 ## 注意事项
 * 需要的基础文件有 library.xlsx 和 willGetJob.xlsx   library.xlsx中存放从汇总表copy过来的所有报名的信息，按照第一行标题copy好，还有岗位需求表，**这里需要给出贫困生与非贫困生的需求数目，两者之和是发布的总人数**，*没有名额的可以不填或填0* 将急需招聘的岗位放到前面
-* 文件存放的路径，在
+* 文件存放的路径，在PATH.py文件中进行了定义
+>LIBRARY_PATH = r'D:\TWA\work\library.xlsx'
+
+>JOBINGO_PATH = r'D:\TWA\work\willGetJob.xlsx'
+
+>RESULT_PATH = r'D:\TWA\work\result.xlsx'
+也可以进行修改，不过我会把这个东西打包成.exe可执行文件给你，就不好修改了。有兴趣可以下载一个pyhton for windows软件在电脑上直接运行上面的代码，还可以自己随意修改，很简单的对于会清理注册表熟练CAD的安装和卸载的小孩。
