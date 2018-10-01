@@ -1,3 +1,4 @@
+
 # TWA
 Tangzl Work Automation
 ## 简历自动分配
@@ -23,4 +24,5 @@ Tangzl Work Automation
 >JOBINGO_PATH = r'D:\TWA\work\willGetJob.xlsx'
 
 >RESULT_PATH = r'D:\TWA\work\result.xlsx'
+
 也可以进行修改，不过我会把这个东西打包成.exe可执行文件给你，就不好修改了。有兴趣可以下载一个pyhton for windows软件在电脑上直接运行上面的代码，还可以自己随意修改，很简单的对于会清理注册表熟练CAD的安装和卸载的小孩。
