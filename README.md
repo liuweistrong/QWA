@@ -1,6 +1,6 @@
 
 # TWA
-Tangzl Work Automation
+Terminal Work Automation
 ## 简历自动分配
 ### Load 信息
 载入提供给的信息，主要包括library文件中的岗位招聘信息和所有报名的同学信息，获得录取资格的编号。
